@@ -17,8 +17,8 @@
         android:layout_marginBottom="8dp"
         android:background="@android:color/holo_orange_light"
         android:padding="@android:dimen/dialog_min_width_major"
-        android:paddingLeft="60SP"
-        android:paddingRight="60SP"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:text="GET WEATHER"
         android:textColor="@android:color/background_dark"
         android:textSize="36sp"
@@ -75,9 +75,17 @@
         android:id="@+id/result"
         android:layout_width="148dp"
         android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="176dp"
-        tools:layout_editor_absoluteY="492dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.587"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintVertical_bias="0.541" />
 
 </android.support.constraint.ConstraintLayout>

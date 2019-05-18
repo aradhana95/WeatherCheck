@@ -1,8 +1,9 @@
 package com.example.weatherapp;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -21,11 +22,12 @@ public class MainActivity<API> extends AppCompatActivity {
     Button button;
     EditText city;
     TextView result;
-//http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=5fbdde63e278c55d85c0086a92e647ae
-    String baseURL="http://api.openweathermap.org/data/2.5/weather?q=";
+
+    //http://api.openweathermap.org/data/2.5/weather?q=London,uk&APPID=5fbdde63e278c55d85c0086a92e647ae
+    String baseURL = "http://api.openweathermap.org/data/2.5/weather?q=";
 
 
-     String API="&APPID=5fbdde63e278c55d85c0086a92e647ae";
+    String API = "&APPID=5fbdde63e278c55d85c0086a92e647ae";
 
 
     @Override
@@ -37,75 +39,85 @@ public class MainActivity<API> extends AppCompatActivity {
         city = (EditText) findViewById(R.id.getCity);
         result = (TextView) findViewById(R.id.result);
 
-        String myURL= baseURL + city.getText().toString()  + API;
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        //Log.i("URL" ,"URL" + myURL);
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, myURL, null,
-                new Response.Listener<JSONObject>() {
+                String myURL = baseURL + city.getText().toString() + API;
 
-                    @Override
+                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, myURL, null,
+                        new Response.Listener<JSONObject>() {
 
-                    public void onResponse(JSONObject jsonObject) {
+                            @Override
 
-                        Log.i("jSON:" ,"JSON:" + jsonObject);
+                            public void onResponse(JSONObject jsonObject) {
 
-                        try {
-                            String info = jsonObject.getString("weather");
+                                Log.i("jSON:", "JSON:" + jsonObject);
 
-                            Log.i("INFO","INFO"+info);
+                                try {
+                                    String info = jsonObject.getString("weather");
 
-                            JSONArray ar = new JSONArray(info);
+                                    Log.i("INFO", "INFO" + info);
 
-                            for (int i = 0; i<ar.length(); i++){
+                                    JSONArray ar = new JSONArray(info);
 
-                                JSONObject parObj= ar.getJSONObject(i);
+                                    for (int i = 0; i < ar.length(); i++) {
 
-                                String myWeather = parObj.getString("main");
-                                result.setText(myWeather);
-                                Log.i("ID","ID"+parObj.getString("id"));
-                                Log.i("MAIN","MAIN"+parObj.getString("main"));
+                                        JSONObject parObj = ar.getJSONObject(i);
 
+                                        String myWeather = parObj.getString("main");
+                                        result.setText(myWeather);
+                                        Log.i("ID", "ID" + parObj.getString("id"));
+                                        Log.i("MAIN", "MAIN" + parObj.getString("main"));
+
+
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+
+
+
+
+                   /* try {
+                        String  coor = jsonObject.getString("coord");
+                        Log.i("Coor","Coor" + coor);
+                        JSONObject co = new JSONObject(coor);
+
+                        String lon =co.getString("lon");
+                        String lat =co.getString("lat");
+
+                        Log.i("LON" ,"LON:"+lon);
+                        Log.i("LAT" ,"LAT:"+lon);
+
+
+
+                    }catch (JSONException e){
+                        e.printStackTrace();
+                    }*/
 
                             }
-                        }catch (JSONException e){
-                            e.printStackTrace();
+
+                        },
+
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                Log.i("Error", "somthing went wrong" + volleyError);
+                            }
                         }
 
 
-                        try {
-                            String  coor = jsonObject.getString("coord");
-                            Log.i("Coor","Coor" + coor);
-                            JSONObject co = new JSONObject(coor);
+                );
 
-                            String lon =co.getString("lon");
-                            String lat =co.getString("lat");
+                MySingleton.getInstance(MainActivity.this).addToRequestQue(jsonObjectRequest);
 
-                            Log.i("LON" ,"LON:"+lon);
-                            Log.i("LAT" ,"LAT:"+lon);
-
-
-
-                        }catch (JSONException e){
-                            e.printStackTrace();
-                        }
-
-                    }
-
-                },
-
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Log.i("Error", "somthing went wrong"+ volleyError);
-                    }
-                }
-
-
-        );
-
-        MySingleton.getInstance(MainActivity.this).addToRequestQue(jsonObjectRequest);
-
-
+            }
+        });
 
     }
 }
+
+
+
